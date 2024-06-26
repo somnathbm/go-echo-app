@@ -25,5 +25,11 @@ func main() {
 		h := HealthCheckResponse{Status: "OK"}
 		return c.JSON(http.StatusOK, h)
 	})
+
+	// ping path
+	e.GET("/ping", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, HealthCheckResponse{Status: "PONG!!"})
+	})
+
 	e.Logger.Fatal(e.Start(":1323"))
 }
