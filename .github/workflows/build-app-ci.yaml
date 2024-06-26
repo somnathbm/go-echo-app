@@ -1,0 +1,17 @@
+name: Go Echo app CI
+run-name: Go Echo app CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  
+jobs:
+  test-app:
+    runs-on: ubuntu-latest
+    container: golang:alpine
+    steps:
+      - uses: actions/checkout@v4
+      - run: go test .
