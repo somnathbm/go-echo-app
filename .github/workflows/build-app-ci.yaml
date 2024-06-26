@@ -13,5 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     container: golang:alpine
     steps:
-      - uses: actions/checkout@v4
-      - run: go test .
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: go get .
+      - name: Test the app
+        run: go test
