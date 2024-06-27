@@ -16,6 +16,7 @@ jobs:
         run: go get .
       - name: Test the app
         run: go test
+
   publish-app:
     needs: test-app
     runs-on: ubuntu-latest
@@ -34,3 +35,18 @@ jobs:
         with:
           push: true
           tags: somnathbm/go-echo:${{ github.ref_name }}
+          
+  update-k8s-manifest:
+    needs: publish-app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the infra repo
+        uses: actions/checkout@v4
+        with:
+          repository: https://github.com/somnathbm/go-echo-app-infra.git
+          ref: HEAD
+      - name: Modify the source K8s manifest file
+        run: |
+          sed -iE "s/:v.*/:${{ github.ref_name }}/i" go-echo-app.yaml
+          git commit -am "changelog - updated the image tag with the latest image version ${{ github.ref_name }}"
+          git push
