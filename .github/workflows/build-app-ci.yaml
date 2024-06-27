@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: somnathbm/go-echo-app-infra
-          ref: HEAD
+          ref: main
       - name: Modify the source K8s manifest file
         run: |
           sed -iE "s/:v.*/:${{ github.ref_name }}/i" go-echo-app.yaml
