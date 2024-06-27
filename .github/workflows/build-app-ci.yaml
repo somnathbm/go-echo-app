@@ -45,6 +45,10 @@ jobs:
         with:
           repository: somnathbm/go-echo-app-infra
           ref: main
+      - name: Setup git config
+        run: |
+          git config --global user.email "somnathbm0@gmail.com"
+          git config --global user.name "somnathbm"
       - name: Modify the source K8s manifest file
         run: |
           sed -iE "s/:v.*/:${{ github.ref_name }}/i" go-echo-app.yaml
