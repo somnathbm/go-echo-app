@@ -35,7 +35,7 @@ jobs:
         with:
           push: true
           tags: somnathbm/go-echo:${{ github.ref_name }}
-          
+
   update-k8s-manifest:
     needs: publish-app
     runs-on: ubuntu-latest
@@ -43,7 +43,7 @@ jobs:
       - name: Checkout the infra repo
         uses: actions/checkout@v4
         with:
-          repository: https://github.com/somnathbm/go-echo-app-infra.git
+          repository: somnathbm/go-echo-app-infra
           ref: HEAD
       - name: Modify the source K8s manifest file
         run: |
