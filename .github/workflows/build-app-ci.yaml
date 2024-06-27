@@ -2,11 +2,8 @@ name: Go Echo app CI
 run-name: Go Echo app CI
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    tags:
+      - v*
   
 jobs:
   print_tag_name:
