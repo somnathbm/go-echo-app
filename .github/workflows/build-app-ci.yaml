@@ -2,44 +2,45 @@ name: Go Echo app CI
 run-name: Go Echo app CI
 on:
   push:
-    # tags:
-    #   - v*
-    branches:
-      - main
+    tags:
+      - v*
   
 jobs:
-  # test-app:
-  #   runs-on: ubuntu-latest
-  #   container: golang:alpine
-  #   steps:
-  #     - name: Check out repo
-  #       uses: actions/checkout@v4
-  #     - name: Install dependencies
-  #       run: go get .
-  #     - name: Test the app
-  #       run: go test
+  # Test the Go app
+  test-app:
+    runs-on: ubuntu-latest
+    container: golang:alpine
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: go get .
+      - name: Test the app
+        run: go test
 
-  # publish-app:
-  #   needs: test-app
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Setup QEMU
-  #       uses: docker/setup-qemu-action@v3
-  #     - name: setuo Docker buildx
-  #       uses: docker/setup-buildx-action@v3
-  #     - name: Login to Docker Hub
-  #       uses: docker/login-action@v3
-  #       with:
-  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-  #     - name: Build & publish the image
-  #       uses: docker/build-push-action@v6
-  #       with:
-  #         push: true
-  #         tags: somnathbm/go-echo:${{ github.ref_name }}
+  # Build, dockerize and publish image to Docker Hub. Can be published to GCR or ECR
+  publish-app:
+    needs: test-app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: setuo Docker buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Build & publish the image
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: somnathbm/go-echo:${{ github.ref_name }}
 
+  # Update the K8s deployment manifest in another repo and push changes from where ArgoCD will take over
   update-k8s-manifest:
-    # needs: publish-app
+    needs: publish-app
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the infra repo
@@ -53,12 +54,8 @@ jobs:
           git config --global user.email "somnathbm0@gmail.com"
           git config --global user.name "somnathbm"
       - name: Modify the source K8s manifest file
-        # run: |
-        #   sed -iE "s/:v.*/:${{ github.ref_name }}/i" go-echo-app.yaml
-        #   git commit -am "changelog - updated the image tag with the latest image version ${{ github.ref_name }}"
-        #   git push
         run: |
-          echo "Hello world #2" > hello2.txt
+          sed -iE "s/:v.*/:${{ github.ref_name }}/i" go-echo-app.yaml
           git add .
-          git commit -m "hello2 added"
+          git commit -m "changelog - updated the image tag with the latest image version ${{ github.ref_name }}"
           git push

@@ -30,7 +30,7 @@ func main() {
 
 	// ping path
 	e.GET("/ping", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, HealthCheckResponse{Status: "POOOONG!!", Runtime: runtime.GOOS})
+		return c.JSON(http.StatusOK, HealthCheckResponse{Status: "PONG!!", Runtime: runtime.GOOS})
 	})
 
 	e.Logger.Fatal(e.Start(":1323"))
