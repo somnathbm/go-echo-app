@@ -39,7 +39,7 @@ jobs:
   #         tags: somnathbm/go-echo:${{ github.ref_name }}
 
   update-k8s-manifest:
-    needs: publish-app
+    # needs: publish-app
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the infra repo
@@ -47,6 +47,7 @@ jobs:
         with:
           repository: somnathbm/go-echo-app-infra
           ref: main
+          token: ${{ secrets.PAT }}
       - name: Setup git config
         run: |
           git config --global user.email "somnathbm0@gmail.com"
