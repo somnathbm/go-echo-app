@@ -58,7 +58,7 @@ jobs:
         #   git commit -am "changelog - updated the image tag with the latest image version ${{ github.ref_name }}"
         #   git push
         run: |
-          echo "Hello world" > hello.txt
+          echo "Hello world #2" > hello2.txt
           git add .
-          git commit -m "hello1 added"
-          git push -u origin main
+          git commit -m "hello2 added"
+          git push
