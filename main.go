@@ -19,7 +19,7 @@ func main() {
 
 	// root route
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello Echo!")
+		return c.String(http.StatusOK, "Hello Gopher!!")
 	})
 
 	// health check endpoint
