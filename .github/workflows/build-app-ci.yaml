@@ -55,7 +55,7 @@ jobs:
           git config --global user.name "somnathbm"
       - name: Modify the source K8s manifest file
         run: |
-          sed -i "" -E "s/:v.*/:${{ github.ref_name }}/i" go-echo-app.yaml
+          sed -i"" -E "s/:v.*/:${{ github.ref_name }}/i" go-echo-app.yaml
           git add .
           git commit -m "changelog - updated the image tag with the latest image version ${{ github.ref_name }}"
           git push
